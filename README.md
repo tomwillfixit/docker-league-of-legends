@@ -2,11 +2,11 @@
 
 Running League of Legends from a Docker container.
 
-[lol](img/lol.jpg)
+![lol](img/lol.jpg)
 
 My first experience of League of Legends was on a 7 year old laptop with Windows 7 installed. As a daily linux user however I would prefer to play on linux.
 
-There are a number of ways to play League of Legends on linux.  Options include using PlayOnLinux or wine.  Most guides involve multiple manual steps, tweaks and workarounds.
+There are a number of ways to play League of Legends on linux.  Options include using PlayOnLinux or wine.  Most guides involve multiple manual steps, tweaks and workarounds. Please ensure you have at least the minimum spec of graphics card to run LoL. See the official documentation for more details.
 
 As a Docker lover what if we could play League of Legends with a single Docker command?
 
