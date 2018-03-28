@@ -24,10 +24,11 @@ docker build -t lol .
 
 Start a container based on the lol image : 
 
-We are sharing in 3 devices; sound, onboard graphics card and NVIDIA graphics card.
+We are sharing in 2 devices; sound and NVIDIA graphics card.  To find the device name of your graphics card run : ls /dev/dri
+You should see a card0.  Add this into the --device option below.
 
 ```
-docker run -it --net host -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=unix$DISPLAY --device /dev/snd --security-opt seccomp:unconfined --name lol --device=/dev/dri/card0:/dev/dri/card0 --device=/dev/dri/card1:/dev/dri/card1 --entrypoint /bin/bash lol:latest
+docker run -it --net host -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=unix$DISPLAY --device /dev/snd --security-opt seccomp:unconfined --name lol --device=/dev/dri/card0:/dev/dri/card0 --entrypoint /bin/bash lol:latest
 ```
 
 ## Step 3 : Install League of Legends
