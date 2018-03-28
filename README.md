@@ -49,6 +49,21 @@ The following command will start the client. Select the Region you wish to play 
 ```
 WINEPREFIX=~/.LoL64 wine "/root/.LoL64/drive_c/Riot Games/League of Legends/LeagueClient.exe"
 ```
+## Restarting the game
+
+Here are 2 helper aliases that can be used to start and stop League of Legends. You can add these to your ~/bash_aliases file.
+```
+alias startlol="xhost + ; docker start lol ; docker exec -it lol /bin/bash -c \"WINEPREFIX=~/.LoL64 wine '/root/.LoL64/drive_c/Riot Games/League of Legends/LeagueClient.exe'\""
+
+alias stoplol="docker stop lol"
+```
+## Removing the game
+
+Careful now : If you remove the lol container you will lose the downloaded client from Step 4.  To completely remove the lol container and the lol image run :
+```
+docker rm -f lol
+docker rmi lol:latest
+```
 
 ## Summary
 
