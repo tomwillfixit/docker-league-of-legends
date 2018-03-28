@@ -38,7 +38,7 @@ WINEPREFIX=~/.LoL64 wine /root/lol.exe
 ```
 Accept the defaults and the installation should complete successfully. Untick the "Start League of Legends" box in the final screen and click exit.
 
-## Step 6 : Start League of Legends and enjoy
+## Step 4 : Start League of Legends and enjoy
 
 The following command will start the client. Select the Region you wish to play in and the rest of the game will be downloaded.
 
