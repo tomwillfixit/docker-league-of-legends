@@ -25,9 +25,12 @@ docker build -t lol .
 Start a container based on the lol image : 
 
 We are sharing in 2 devices; sound and NVIDIA graphics card.  To find the device name of your graphics card run : ls /dev/dri
-You should see a card0.  Add this into the --device option below.
+You should see a card0.  Add this into the --device option below. We run xhost + to allow the container to connect to the Xserver on the host.
 
+Example : 
 ```
+xhost +
+
 docker run -it --net host -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=unix$DISPLAY --device /dev/snd --security-opt seccomp:unconfined --name lol --device=/dev/dri/card0:/dev/dri/card0 --entrypoint /bin/bash lol:latest
 ```
 
