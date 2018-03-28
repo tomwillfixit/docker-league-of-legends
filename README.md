@@ -49,16 +49,16 @@ The wine UI will be displayed.
 --> You'll be prompted to install the Mono and Gecko packages. Just hit install and continue.  
 --> Select the Staging tab and tick the "Enable CSMT box"
 
-Exit wine.
+Press Apply and exit wine.
 ```
 
 ## Step 5 : Install League of Legends
 
 To start the LOL installer run :
 ```
-WINEPREFIX=~/.LoL64 wine /opt/lol.exe
+WINEPREFIX=~/.LoL64 wine /root/lol.exe
 ```
-Accept the defaults and the installation should complete successfully.
+Accept the defaults and the installation should complete successfully. Untick the "Start League of Legends" box in the final screen and click exit.
 
 ## Step 6 : Start League of Legends and enjoy
 
