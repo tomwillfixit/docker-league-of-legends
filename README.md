@@ -24,8 +24,8 @@ docker build -t lol .
 
 Start a container based on the lol image : 
 
-We are sharing in 2 devices; sound and NVIDIA graphics card.  To find the device name of your graphics card run : ls /dev/dri
-You should see a card0.  Add this into the --device option below. We run xhost + to allow the container to connect to the Xserver on the host.
+We are sharing in 2 devices; sound and NVIDIA graphics card.  To find the device name of your graphics card run : `ls /dev/dri`
+You should see a card0.  Add this into the second `--device` option below. We run `xhost +` to allow the container to connect to the Xserver on the host.
 
 Example : 
 ```
