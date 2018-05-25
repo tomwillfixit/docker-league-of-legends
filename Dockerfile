@@ -9,7 +9,8 @@ RUN apt-get update && apt-get install wget software-properties-common python-sof
 WORKDIR /root
 
 # Install Wine
-RUN wget -nc https://repos.wine-staging.com/wine/Release.key 
+#RUN wget -nc https://repos.wine-staging.com/wine/Release.key 
+RUN wget -nc https://dl.winehq.org/wine-builds/Release.key
 RUN apt-key add Release.key
 RUN apt-add-repository https://dl.winehq.org/wine-builds/ubuntu/
 RUN apt-get update
