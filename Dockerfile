@@ -8,9 +8,10 @@ RUN apt-get update && apt-get install wget software-properties-common python-sof
 
 WORKDIR /root
 
+
 # Install Wine
 #RUN wget -nc https://repos.wine-staging.com/wine/Release.key 
-RUN wget -nc https://dl.winehq.org/wine-builds/Release.key
+RUN wget -nc https://dl.winehq.org/wine-builds/Release.key 
 RUN apt-key add Release.key
 RUN apt-add-repository https://dl.winehq.org/wine-builds/ubuntu/
 RUN apt-get update
@@ -31,6 +32,11 @@ RUN WINEPREFIX=~/.LoL64 ./winetricks d3dx9
 
 # Add LOL exe installer to image. This was downloaded from : https://signup.na.leagueoflegends.com/en/signup/redownload
 
-COPY lol.exe /root/lol.exe
+COPY client/lol.exe /root/lol.exe
+COPY scripts/start_league /root/start_league
 
 VOLUME /root
+
+ENTRYPOINT ["/bin/bash"]
+
+CMD ["./start_league"]

@@ -8,10 +8,25 @@ My first experience of League of Legends was on a 7 year old laptop with Windows
 
 There are a number of ways to play League of Legends on linux.  Options include using PlayOnLinux or wine.  Most guides involve multiple manual steps, tweaks and workarounds. Please ensure you have at least the minimum spec of graphics card to run LoL. See the official documentation for more details.
 
-As a Docker lover what if we could play League of Legends with a single Docker command?
+As a Docker lover what if we could play League of Legends with a single command?  This script was tested on Ubuntu 17.10. I've been playing League of Legends daily using this setup for the past 3 months and haven't encountered any serious issues.
 
-Spoiler Alert : I haven't got this refined down to a single command but the following steps will get you started.
+# Instructions
 
+## Step 1 :
+
+```
+./league-of-legends.sh
+
+```
+
+The first time this script is run it will build the League of Legends container image, walk through the installation process and then start the client. At the end of the installation you will be prompted on whether you want to "Start League of Legends". You can leave this box ticked and click finish.
+
+If the League of Legends client is not running and you want to start it just run : ./league-of-legends.sh 
+
+That's it.  Expect more updates to this in the coming weeks.  GL;HF!
+
+
+# Old instructions
 
 ## Step 1 : Build the container image
 
