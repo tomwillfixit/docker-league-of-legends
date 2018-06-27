@@ -22,14 +22,6 @@ RUN apt-get install --install-recommends winehq-staging -y
 RUN apt-get purge -y software-properties-common
 RUN apt-get autoclean -y
 
-# Install winetricks
-RUN apt-get install wget -y
-RUN wget https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks && chmod +x winetricks
-RUN apt-get install cabextract -y
-
-# Install Direct X
-RUN WINEPREFIX=~/.LoL64 ./winetricks d3dx9
-
 # Add LOL exe installer to image. This was downloaded from : https://signup.na.leagueoflegends.com/en/signup/redownload
 
 COPY client/lol.exe /root/lol.exe
