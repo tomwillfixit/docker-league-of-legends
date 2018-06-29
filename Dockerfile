@@ -8,7 +8,6 @@ RUN apt-get update && apt-get install wget software-properties-common python-sof
 
 WORKDIR /root
 
-
 # Install Wine
 #RUN wget -nc https://repos.wine-staging.com/wine/Release.key 
 RUN wget -nc https://dl.winehq.org/wine-builds/Release.key 
@@ -22,9 +21,17 @@ RUN apt-get install --install-recommends winehq-staging -y
 RUN apt-get purge -y software-properties-common
 RUN apt-get autoclean -y
 
-# Add LOL exe installer to image. This was downloaded from : https://signup.na.leagueoflegends.com/en/signup/redownload
+# 2 Options to install : Provide the League-of-Legends installer exe or provide a preinstalled bundle
+# COPY client/lol.exe /root/lol.exe
+# or
+# Copy in preinstalled client
+#COPY client/preinstalled_client.tar /root/Lol64_installed.tar
+COPY client/preinstalled_client1 /root/preinstalled_client1
+COPY client/preinstalled_client2 /root/preinstalled_client2
+COPY client/preinstalled_client3 /root/preinstalled_client3
 
-COPY client/lol.exe /root/lol.exe
+RUN cat /root/preinstalled_client* > /root/Lol64_installed.tar
+
 COPY scripts/start_league /root/start_league
 
 VOLUME /root
@@ -32,3 +39,4 @@ VOLUME /root
 ENTRYPOINT ["/bin/bash"]
 
 CMD ["./start_league"]
+

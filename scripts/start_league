@@ -3,15 +3,23 @@
 # This script will install League if it is not already installed.
 # If League is installed then the Client will be started
 
-export WINEPREFIX=~/.LoL64
 export WINEDLLOVERRIDES="mscoree,mshtml="
+export WINEPREFIX=~/.LoL64
+
+# Check for preinstalled League Client
+
+if [ -f /root/Lol64_installed.tar ];then
+    echo "Found Pre-installed League Client"
+    echo "Extracting /root/Lol64_installed.tar into /root/.LoL64"
+    tar -xvf /root/Lol64_installed.tar -C /root
+fi
 
 if [ -f "/root/.LoL64/drive_c/Riot Games/League of Legends/LeagueClient.exe" ];then
     echo "League is already installed. Starting"
     wine "/root/.LoL64/drive_c/Riot Games/League of Legends/LeagueClient.exe"
 else
     echo "League doesn't appear to be installed. Starting installer"
-    wine /root/lol.exe
+    wine /root/lol.exe --mode unattended
 fi
 
 while(true)
