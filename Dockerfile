@@ -1,10 +1,12 @@
-FROM ubuntu:artful
+# Using new minimal Ubuntu
+
+FROM ubuntu:18.04
 
 MAINTAINER tomwillfixit
 
 RUN dpkg --add-architecture i386
 
-RUN apt-get update && apt-get install wget software-properties-common python-software-properties -y
+RUN apt-get update && apt-get install wget software-properties-common -y
 
 WORKDIR /root
 

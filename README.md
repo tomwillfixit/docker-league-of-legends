@@ -4,6 +4,14 @@ Running League of Legends from a Docker container.
 
 ![lol](img/lol.jpg)
 
+*** This no longer works ***
+
+The client will launch and you can browse the store but you won't be able to start a game.
+
+Details can be found here : https://boards.na.leagueoflegends.com/en/c/bug-report/sB4ucqXc-game-client-anti-cheat-changes-going-live
+
+*****************************
+
 My first experience of League of Legends was on a 7 year old laptop with Windows 7 installed. As a daily linux user however I would prefer to play on linux.
 
 There are a number of ways to play League of Legends on linux.  Options include using PlayOnLinux or wine.  Most guides involve multiple manual steps, tweaks and workarounds. Please ensure you have at least the minimum spec of graphics card to run LoL. See the official documentation for more details.
@@ -83,3 +91,10 @@ docker rmi lol:latest
 ## Summary
 
 While the above should just work it still needs some more refinement. More updates incoming.
+
+## Debugging
+
+Logs :
+```
+docker exec -it league-of-legends /bin/bash -c "cd \"/root/.LoL64/drive_c/Riot Games/League of Legends/Logs/LeagueClient gs\" ; ls -rt |tail -2 |xargs tail -f"
+```
