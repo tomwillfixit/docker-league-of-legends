@@ -1,0 +1,35 @@
+From 0dfef52f057a8de501ca39de5d78561ab52730f0 Mon Sep 17 00:00:00 2001
+From: Andrew Wesie <awesie@gmail.com>
+Date: Thu, 26 Jul 2018 11:34:32 -0500
+Subject: [PATCH 5/9] Stub for ProcessCookie in NtQueryInformationProcess.
+
+---
+ dlls/ntdll/process.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/dlls/ntdll/process.c b/dlls/ntdll/process.c
+index 5d9ce81..689556d 100644
+--- a/dlls/ntdll/process.c
++++ b/dlls/ntdll/process.c
+@@ -619,6 +619,18 @@ NTSTATUS WINAPI NtQueryInformationProcess(
+         else
+             ret = STATUS_INFO_LENGTH_MISMATCH;
+         break;
++    case ProcessCookie:
++        FIXME("(%p,info_class=%d,%p,0x%08x,%p) stub\n",
++              ProcessHandle,ProcessInformationClass,
++              ProcessInformation,ProcessInformationLength,
++              ReturnLength);
++
++        len = sizeof(ULONG);
++        if (ProcessInformationLength == len)
++            *(ULONG *)ProcessInformation = 0;
++        else
++            ret = STATUS_INFO_LENGTH_MISMATCH;
++        break;
+     default:
+         FIXME("(%p,info_class=%d,%p,0x%08x,%p) Unknown information class\n",
+               ProcessHandle,ProcessInformationClass,
+-- 
+2.7.4
+
