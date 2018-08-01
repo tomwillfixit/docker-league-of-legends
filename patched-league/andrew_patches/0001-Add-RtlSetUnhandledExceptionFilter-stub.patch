@@ -1,0 +1,38 @@
+From a0af825b689a312131c73dd87f70a9d6bc9c1a9c Mon Sep 17 00:00:00 2001
+From: Andrew Wesie <awesie@gmail.com>
+Date: Mon, 23 Jul 2018 19:30:01 -0700
+Subject: [PATCH 1/9] Add RtlSetUnhandledExceptionFilter stub.
+
+---
+ dlls/ntdll/exception.c | 5 +++++
+ dlls/ntdll/ntdll.spec  | 1 +
+ 2 files changed, 6 insertions(+)
+
+diff --git a/dlls/ntdll/exception.c b/dlls/ntdll/exception.c
+index 2887d69..d62a01c 100644
+--- a/dlls/ntdll/exception.c
++++ b/dlls/ntdll/exception.c
+@@ -335,3 +335,8 @@ void __wine_spec_unimplemented_stub( const char *module, const char *function )
+     record.ExceptionInformation[1] = (ULONG_PTR)function;
+     for (;;) RtlRaiseException( &record );
+ }
++
++VOID WINAPI RtlSetUnhandledExceptionFilter( PVOID handler )
++{
++    FIXME( "(%p) stub!\n", handler );
++}
+diff --git a/dlls/ntdll/ntdll.spec b/dlls/ntdll/ntdll.spec
+index 7532225..542f9f8 100644
+--- a/dlls/ntdll/ntdll.spec
++++ b/dlls/ntdll/ntdll.spec
+@@ -902,6 +902,7 @@
+ # @ stub RtlSetThreadPoolStartFunc
+ @ stdcall RtlSetTimeZoneInformation(ptr)
+ # @ stub RtlSetTimer
++@ stdcall RtlSetUnhandledExceptionFilter(ptr)
+ @ stub RtlSetUnicodeCallouts
+ @ stub RtlSetUserFlagsHeap
+ @ stub RtlSetUserValueHeap
+-- 
+2.7.4
+

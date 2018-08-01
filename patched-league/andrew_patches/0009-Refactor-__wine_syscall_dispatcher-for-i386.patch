@@ -1,0 +1,63 @@
+From 4a26eee5085f06865a98c22b721a1e238bdc17d2 Mon Sep 17 00:00:00 2001
+From: Andrew Wesie <awesie@gmail.com>
+Date: Fri, 27 Jul 2018 01:30:59 -0500
+Subject: [PATCH 9/9] Refactor __wine_syscall_dispatcher for i386.
+
+Some programs that hook system calls in ntdll expect to be able hook both the
+first instruction and the last instruction (ret). The previous version of
+__wine_syscall_dispatcher intentionally never returned back to the return
+instruction as an optimization. This behavior is incorrect.
+
+The new version will make a copy of the arguments on to the stack, call the
+system call implementaion, restore the stack pointer, and return back to the
+__syscall_ wrapper function.
+
+There is a known bug: the new version will copy more bytes than necessary.
+This could cause a segmentation fault if the arguments are sufficiently close
+to the end of the stack memory allocation.
+---
+ tools/winebuild/spec32.c | 23 +++++++++++++++++++----
+ 1 file changed, 19 insertions(+), 4 deletions(-)
+
+diff --git a/tools/winebuild/spec32.c b/tools/winebuild/spec32.c
+index 48a9abe..24ea17d 100644
+--- a/tools/winebuild/spec32.c
++++ b/tools/winebuild/spec32.c
+@@ -405,15 +405,30 @@ static void output_syscall_thunks_x86( DLLSPEC *spec )
+     output( "\t%s\n", func_declaration("__wine_syscall_dispatcher") );
+     output( "%s\n", asm_globl("__wine_syscall_dispatcher") );
+     output_cfi( ".cfi_startproc" );
+-    output( "\tadd $4, %%esp\n" );
++    output( "\tpush %%ebp\n" );
++    output( "\tmov %%esp, %%ebp\n" );
++    output( "\tpush %%esi\n" );
++    output( "\tpush %%edi\n" );
++    /* XXX We always copy 64 bytes. This will crash if we go past the end of the stack. */
++    output( "\tsub $0x40, %%esp\n" );
++    output( "\tmov %%edx, %%esi\n" );
++    output( "\tmov %%esp, %%edi\n" );
++    output( "\tmov $0x10, %%ecx\n" );
++    output( "\trep movsd\n" );
+     if (UsePIC)
+     {
+         output( "\tcall 1f\n" );
+         output( "1:\tpopl %%ecx\n" );
+-        output( "\tjmpl *(%s-1b)(%%ecx,%%eax,%d)\n", asm_name("__wine_syscall_table"), get_ptr_size() );
++        output( "\tcalll *(%s-1b)(%%ecx,%%eax,%d)\n", asm_name("__wine_syscall_table"), get_ptr_size() );
+     }
+-    else output( "\tjmpl *%s(,%%eax,%d)\n", asm_name("__wine_syscall_table"), get_ptr_size() );
+-    output( "\tret\n" );
++    else output( "\tcalll *%s(,%%eax,%d)\n", asm_name("__wine_syscall_table"), get_ptr_size() );
++    /* Esp will not be properly restored by the callee, so we must restore from the frame pointer. */
++    output( "\tlea -8(%%ebp), %%esp\n" );
++    output( "\tpop %%edi\n" );
++    output( "\tpop %%esi\n" );
++    output( "\tleave\n" );
++    /* XXX This probably makes the RSB unhappy, but we need to account for the "add esp, 4" in the syscall. */
++    output( "\tjmpl *(%%esp)\n" );
+     output_cfi( ".cfi_endproc" );
+     output_function_size( "__wine_syscall_dispatcher" );
+ }
+-- 
+2.7.4
+

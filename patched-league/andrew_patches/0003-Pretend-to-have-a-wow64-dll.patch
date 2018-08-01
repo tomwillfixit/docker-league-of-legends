@@ -1,0 +1,53 @@
+From ac503c3ac3df652dd37b18a8437d021a929a33aa Mon Sep 17 00:00:00 2001
+From: Andrew Wesie <awesie@gmail.com>
+Date: Mon, 23 Jul 2018 19:32:56 -0700
+Subject: [PATCH 3/9] Pretend to have a wow64 dll.
+
+Some anti-cheat engines inspect the CS segment register to determine if they
+are running under WoW64. Since Linux 32-bit code segment is the same as the
+WoW64 32-bit code segment, 0x23, the anti-cheat will expect to be in a WoW64
+environment.
+
+The exemplary anti-cheat engine looks for the Wow64Transition export, or if
+it does not exist it will use TEB:0xC0, and then calls NtQueryVirtualMemory
+to get the MemorySectionName of the function. It checks that the returned
+string matches wow64cpu.dll.
+---
+ dlls/ntdll/virtual.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/dlls/ntdll/virtual.c b/dlls/ntdll/virtual.c
+index a39ca94..aff359f 100644
+--- a/dlls/ntdll/virtual.c
++++ b/dlls/ntdll/virtual.c
+@@ -3000,6 +3000,7 @@ static NTSTATUS get_basic_memory_info( HANDLE process, LPCVOID addr,
+ 
+ 
+ /* get file name for mapped section */
++extern void DECLSPEC_NORETURN __wine_syscall_dispatcher( void );
+ static NTSTATUS get_section_name( HANDLE process, LPCVOID addr,
+                                   MEMORY_SECTION_NAME *info,
+                                   SIZE_T len, SIZE_T *res_len )
+@@ -3016,6 +3017,19 @@ static NTSTATUS get_section_name( HANDLE process, LPCVOID addr,
+ 
+     if (!addr || !info || !res_len) return STATUS_INVALID_PARAMETER;
+ 
++    if (addr == __wine_syscall_dispatcher)
++    {
++        static const WCHAR wow64dllW[] = {'w','o','w','6','4','c','p','u','.','d','l','l'};
++        info->SectionFileName.Length = sizeof(wow64dllW);
++        info->SectionFileName.MaximumLength = info->SectionFileName.Length + sizeof(WCHAR);
++        info->SectionFileName.Buffer = (WCHAR *)(info + 1);
++
++        ptr = (WCHAR *)(info + 1);
++        memcpy( ptr, wow64dllW, sizeof(wow64dllW) );
++        ptr[sizeof(wow64dllW) / sizeof(WCHAR)] = 0;
++        return 0;
++    }
++
+     SERVER_START_REQ( get_mapping_file )
+     {
+         req->process = wine_server_obj_handle( process );
+-- 
+2.7.4
+
